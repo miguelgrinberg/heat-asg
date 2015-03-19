@@ -35,7 +35,7 @@ resources:
   wh:
     type: OS::Heat::WaitConditionHandle
 
-  security_group:
+  app_security_group:
       type: OS::Neutron::SecurityGroup
       properties:
         name: web_server_security_group
@@ -43,13 +43,22 @@ resources:
           - protocol: tcp
             port_range_min: 80
             port_range_max: 80
+  agent_security_group:
+      type: OS::Neutron::SecurityGroup
+      properties:
+        name: load_agent_security_group
+        rules:
+          - protocol: tcp
+            port_range_min: 8801
+            port_range_max: 8801
 
   port:
     type: OS::Neutron::Port
     properties:
       network: { get_param: private_network }
       security_groups:
-        - { get_resource: security_group }
+        - { get_resource: app_security_group }
+        - { get_resource: agent_security_group }
 
   tiny_instance:
     type: OS::Nova::Server
@@ -97,7 +106,7 @@ resources:
             venv/bin/pip install flask gunicorn==18.0
 
             # make the tiny user the owner of the application
-            chown -R tiny:tiny app.py
+            chown tiny:tiny app.py
 
             # configure supervisor to run a private gunicorn web server, and
             # to autostart it on boot and when it crashes
@@ -136,6 +145,10 @@ resources:
             ln -s /etc/nginx/sites-available/tiny /etc/nginx/sites-enabled/
             service nginx restart
 
+            # Install the load agent
+            wget -O /tmp/install-agent.sh https://raw.githubusercontent.com/stevelle/loadagent/master/ext/install.sh
+            /tmp/install-agent.sh
+            
             # let Heat know we are done
             wc_notify --data-binary '{"status": "SUCCESS"}'
 
