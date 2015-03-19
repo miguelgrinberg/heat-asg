@@ -150,6 +150,9 @@ resources:
             wget -O /tmp/install-agent.sh https://raw.githubusercontent.com/stevelle/loadagent/master/ext/install.sh
             /tmp/install-agent.sh
             
+            # Install CPU stress test app
+            apt-get -y install stress
+
             # let Heat know we are done
             wc_notify --data-binary '{"status": "SUCCESS"}'
 
