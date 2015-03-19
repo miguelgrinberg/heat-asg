@@ -23,19 +23,19 @@ parameters:
     label: Public network name or ID
     description: Public network to attach server to.
     default: public
-  cluster_init_size:
+  cluster_min_size:
     type: number
-    label: Cluster size
+    label: Cluster minimum size
     description: Number of instances in cluster.
     default: 1 
   cluster_init_size:
     type: number
-    label: Cluster size
+    label: Cluster initial size
     description: Number of instances in cluster.
     default: 2
   cluster_max_size:
     type: number
-    label: Cluster size
+    label: Cluster maximum size
     description: Number of instances in cluster.
     default: 10
 
