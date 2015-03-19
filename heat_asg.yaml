@@ -40,7 +40,7 @@ resources:
     properties:
       count: { get_param: cluster_size }
       resource_def:
-        type: Lib::MSG::Tiny
+        type: Lib::MSG::TinyASG
         properties:
           image: { get_param: image }
           flavor: { get_param: flavor }
