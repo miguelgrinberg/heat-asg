@@ -148,6 +148,7 @@ resources:
 
             # Install the load agent
             wget -O /tmp/install-agent.sh https://raw.githubusercontent.com/stevelle/loadagent/master/ext/install.sh
+            chmod +x /tmp/install-agent.sh
             /tmp/install-agent.sh
             
             # Install CPU stress test app
