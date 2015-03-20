@@ -156,22 +156,21 @@ resources:
 
             # write a config file for the load monitor
             mkdir /etc/loadmonitor
-            cat >/etc/supervisor/conf.d/tiny.conf <<EOF
-            check_period_seconds: 3
-            targets:
-              checks:
-                - name: High CPU
-                  metric: cpu
-                  operator: gte
-                  threshold: 60
-                  alarm_states: 2
-                  trigger_url: __scale_up_url__
-                - name: Low CPU
-                  metric: cpu
-                  operator: lte
-                  threshold: 50
-                  alarm_states: 3
-                  trigger_url: __scale_down_url__
+            cat >/etc/loadmonitor/config.yml <<EOF
+            check_period_seconds: 30
+            checks:
+              - name: High CPU
+                metric: cpu
+                operator: gte
+                threshold: 60
+                alarm_states: 2
+                trigger_url: __scale_up_url__
+              - name: Low CPU
+                metric: cpu
+                operator: lte
+                threshold: 50
+                alarm_states: 3
+                trigger_url: __scale_down_url__
             EOF
 
             # let Heat know that we are done here
