@@ -151,11 +151,6 @@ resources:
             chmod +x /tmp/install-agent.sh
             /tmp/install-agent.sh
             
-            # Install the load monitor
-            wget -O /tmp/install-monitor.sh https://raw.githubusercontent.com/stevelle/loadmonitor/master/ext/install.sh
-            chmod +x /tmp/install-monitor.sh
-            /tmp/install-monitor.sh
-
             # Install CPU stress test app
             apt-get -y install stress
 

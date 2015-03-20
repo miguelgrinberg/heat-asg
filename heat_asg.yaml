@@ -46,10 +46,8 @@ resources:
       public_network: { get_param: public_network }
 
   tiny_cluster:
-    #type: OS::Heat::ResourceGroup
     type: OS::Heat::AutoScalingGroup
     properties:
-      #count: { get_param: cluster_init_size }
       min_size: { get_param: cluster_min_size }
       desired_capacity: { get_param: cluster_init_size }
       max_size: { get_param: cluster_max_size }
@@ -85,6 +83,8 @@ resources:
       key: { get_param: key }
       private_network: { get_attr: [network, name] }
       servers: { get_attr: [tiny_cluster, ip] }
+      scale_up_url: { get_attr: [scale_up_policy, alarm_url] }
+      scale_down_url: { get_attr: [scale_down_policy, alarm_url] }
 
   floating_ip:
     type: Lib::MSG::FloatingIP

@@ -32,6 +32,14 @@ parameters:
     label: Port number
     description: Port number to proxy.
     default: 80
+  scale_up_url:
+    type: string
+    label: Scale Up URL
+    description: The URL to request a scale up event.
+  scale_down_url:
+    type: string
+    label: Scale Down URL
+    description: The URL to request a scale down event.
 
 resources:
   wait_condition:
@@ -76,6 +84,8 @@ resources:
         str_replace:
           params:
             __port__: { get_param: port_number }
+            __scale_up_url: { get_param: scale_up_url }
+            __scale_down_url: { get_param: scale_down_url }
             wc_notify: { get_attr: ['wait_handle', 'curl_cli'] }
           template: |
             #!/bin/bash -ex
@@ -138,6 +148,31 @@ resources:
             echo "* * * * * curl -s http://169.254.169.254/openstack/latest/meta_data.json | python /etc/haproxy/update.py | /usr/bin/logger -t haproxy_update" >>_crontab
             crontab <_crontab
             rm _crontab
+
+            # Install the load monitor
+            wget -O /tmp/install-monitor.sh https://raw.githubusercontent.com/stevelle/loadmonitor/master/ext/install.sh
+            chmod +x /tmp/install-monitor.sh
+            /tmp/install-monitor.sh
+
+            # write a config file for the load monitor
+            mkdir /etc/loadmonitor
+            cat >/etc/supervisor/conf.d/tiny.conf <<EOF
+            check_period_seconds: 3
+            targets:
+              checks:
+                - name: High CPU
+                  metric: cpu
+                  operator: gte
+                  threshold: 60
+                  alarm_states: 2
+                  trigger_url: __scale_up_url__
+                - name: Low CPU
+                  metric: cpu
+                  operator: lte
+                  threshold: 50
+                  alarm_states: 3
+                  trigger_url: __scale_down_url__
+            EOF
 
             # let Heat know that we are done here
             wc_notify --data-binary '{"status": "SUCCESS"}'
