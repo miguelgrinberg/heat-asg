@@ -160,7 +160,7 @@ resources:
             # write a config file for the load monitor
             mkdir /etc/loadmonitor
             cat >/etc/loadmonitor/config.yml <<EOF
-            check_period_seconds: 30
+            check_period_seconds: 5
             checks:
               - name: High CPU
                 metric: cpu
