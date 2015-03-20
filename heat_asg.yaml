@@ -27,7 +27,7 @@ parameters:
     type: number
     label: Cluster minimum size
     description: Number of instances in cluster.
-    default: 1 
+    default: 2
   cluster_init_size:
     type: number
     label: Cluster initial size
@@ -96,3 +96,7 @@ outputs:
   ip:
     description: The public IP address to access the server.
     value: { get_attr: [floating_ip, ip] }
+  debug_up_url:
+    value: { get_attr: [scale_up_policy, alarm_url] }
+  debug_down_url:
+    value: { get_attr: [scale_down_policy, alarm_url] }
