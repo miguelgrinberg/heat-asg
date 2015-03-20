@@ -84,8 +84,8 @@ resources:
         str_replace:
           params:
             __port__: { get_param: port_number }
-            __scale_up_url: { get_param: scale_up_url }
-            __scale_down_url: { get_param: scale_down_url }
+            __scale_up_url__: { get_param: scale_up_url }
+            __scale_down_url__: { get_param: scale_down_url }
             wc_notify: { get_attr: ['wait_handle', 'curl_cli'] }
           template: |
             #!/bin/bash -ex
